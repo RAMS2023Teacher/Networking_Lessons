@@ -5,13 +5,14 @@ import { isMuted, setMuted } from './fx.js';
 const KEY = 'packet-express:display';
 const DEFAULTS = { theme: 'auto', font: 'standard', size: '1', spacing: 'normal', calm: false };
 const OPTIONS = {
-  theme: [['auto', 'Match my device'], ['light', 'Light'], ['dark', 'Dark'], ['contrast', 'High contrast']],
+  theme: [['auto', 'Neon night'], ['light', 'Daylight'], ['contrast', 'High contrast']],
   font: [['standard', 'Standard (Atkinson Hyperlegible)'], ['lexend', 'Lexend'], ['system', 'System']],
   size: [['0.9', 'Small'], ['1', 'Medium'], ['1.15', 'Large'], ['1.3', 'Extra large']],
   spacing: [['normal', 'Normal'], ['wide', 'Wide']],
 };
 
-function load() { try { return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch (_) { return { ...DEFAULTS }; } }
+// 'dark' was a choice before Neon night became the default look. It means the same thing now.
+function load() { try { const v = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; if (v.theme === 'dark') v.theme = 'auto'; return v; } catch (_) { return { ...DEFAULTS }; } }
 export function applySettings(v = load()) {
   const root = document.documentElement;
   for (const k of ['theme', 'font', 'spacing']) { if (v[k] === DEFAULTS[k]) root.removeAttribute(`data-${k}`); else root.setAttribute(`data-${k}`, v[k]); }
